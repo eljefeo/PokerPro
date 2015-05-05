@@ -33,7 +33,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 	private int startX, startY, endX, endY, currentX, currentY,clickX,clickY;
 	//private boolean isFlop, isTurn, isRiver, isDealt,firstGame;
 	//private boolean mouseEntered,clicked;
-	private boolean isToasting;
+	//private boolean isToasting;
 	Font f1;
 	Font f2;
 
