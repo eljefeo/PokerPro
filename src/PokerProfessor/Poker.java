@@ -206,7 +206,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		int pm=cont.game.players.get(cont.game.getAction()).getThinkingTime();
 		if(pm==0)pm=1;
 		g.setColor(Color.BLUE);
-		System.out.println("xu : " + xu + " yu : " + yu + " pm : " + pm);
+		//System.out.println("xu : " + xu + " yu : " + yu + " pm : " + pm);
 		
 		g.fillRect(
 				playerLayout.getPlayerX(cont.game.getWhoeversTurn())-xu,

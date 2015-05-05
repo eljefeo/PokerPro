@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import javax.sql.rowset.Predicate;
-
 public class BigBrain{
 	private int rs,cs,chs,fs;
 	//private int answer=0;
