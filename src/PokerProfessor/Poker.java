@@ -22,6 +22,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 	private int toastX,toastY,toastA,curA;
 	private PlayerLayout playerLayout;
 	private String[] playersCards=new String[2];
+	private int gitInt = 0;
 	private Image image,tempImage,backGround,dealerChip,back,skull,playByPlay,timer,toastBox;
 	private Image check,call,raise,fold,pot,activities,arrow,potBack,playerChips,playerName;
 	private Image one,two,three,four,five,six,seven,eight,nine,zero,potText;
