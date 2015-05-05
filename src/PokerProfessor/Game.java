@@ -11,18 +11,15 @@ public class Game{
 	long pot, currentBet,currentBetOrRaise,bigBlind,smallBlind;
 	int gameState = 0;
 	Random rand=new Random();
-	//String[]flop=new String[3];
-	//String[]boardSeven=new String[7];
 	Board board = new Board();
-	//String turn,river,card,burn;
 	String at="";
 	Scanner sc=new Scanner(System.in);
-	private int choice,action,gameStage;//, numPlayers;
+	private int choice,action,gameStage;
 	Deck deck;
 	Player p;
 	ArrayList<Player>players=new ArrayList<Player>();
 	boolean notDone,handIsOver,midRoundOfBetting;
-	boolean isDealt,isFlop,isTurn,isRiver,gameOver,everyoneFolded;//isUserFolded;
+	boolean isDealt,isFlop,isTurn,isRiver,gameOver,everyoneFolded;
 	Timer tm=new Timer(true);
 
 	public Game(Player[]players,long bigBlind,long smallBlind){
@@ -55,7 +52,7 @@ public class Game{
 	
 	private void resetCurrentBet(){currentBet=0;}
 	private void resetAction(){action=0;}
-	private void resetPRoundOfBetting(){notDone=true;for(Player p:players){p.resetPlayer();p.isDone=false;}}
+	private void resetPRoundOfBetting(){notDone=true;for(Player p:players){p.resetPlayerForBettingRound();p.isDone=false;}}
 	private void resetPot(){pot=0;}
 	
 	public void betOrRaise(Player player,long betOrRaise){
@@ -79,11 +76,12 @@ public class Game{
 		player.folded();
 		player.resetToasting();
 		player.isDone=true;
-		//player.isFolded=true;
 		players.remove(player);
-		//if(player.getID()==0)isUserFolded=true;
 		if(action==players.size())action=0;
-		if(players.size()==1)everyoneFolded=true;
+		if(players.size()==1){
+			everyoneFolded=true;
+			gameStage=5;
+		}
 	}
 	public void call(Player player){
 		player.called();
@@ -115,56 +113,56 @@ public class Game{
 		//uncomment me for developing System.out.println("doing round");
 
 				p=players.get(action);
-				//uncomment me for developing System.out.println("\nAction is at "+action+":::"+players.size());
-				//uncomment me for developing System.out.println("\n\ndoing round of betting --- doin "+p.getName());
-			
-				if(p.isHuman()&&!p.hasFolded()){
-					//uncomment me for developing System.out.println("Human's turn");
-					if(!p.isDone){
-						//uncomment me for developing System.out.println("you are not done, breaking for you");
-						at="Your Turn, current bet is "+currentBet;
-					}
-					else{System.out.println("player is done");}//incAction();}
-				}
+				at=p.getName()+" 's turn";
 				
-				else if(!p.isDone)
+				if(!p.isHuman() && !p.isDone)
 				{
 					if(!p.isDoneThinking()){
 						if(!p.isThinking()){
 							p.startThinking();
 							System.out.println(p.getName()+" started thinking");
-							int aa=rand.nextInt(5);if(aa==0)aa=1;
+							int aa=rand.nextInt(5);
+							if(aa==0)
+								aa=1;
 							p.setThinkingTime(aa); 
 							System.out.println(p.getThinkingTime()+" wait time");
 							return;
 						}
-						else{if(p.getThinkingTime()>0){
-							System.out.println(p.getName()+" is thinking");
-							p.think();
-							return;
-						}else{
-							System.out.println(p.getName()+" done thinking");
-							p.resetIsThinking();p.resetIsDoneThinking();
+						else{
+							if(p.getThinkingTime()>0){
+								System.out.println(p.getName()+" is thinking");
+								p.think();
+								return;
+							}
+							else{
+								System.out.println(p.getName()+" done thinking");
+								p.resetIsThinking();p.resetIsDoneThinking();
 							}
 						}
 					}
-					at=players.get(action).getName()+" 's turn";
-					//uncomment me for developing System.out.println("this guy is not done: "+p.getName());
-				//giveOptions(p);
-					doCompDecision(p);
+					else{
+						doCompDecision(p);
 					}
-				else if(p.isDone){System.out.println("this guy IS done");incAction();}
+					
+					}
+				else if(p.isDone){
+					incAction();
+				}
 		
 				//uncomment me for developing System.out.println("\nAfterwards Action is at "+action);
-				if(allPlayersAreDone()){System.out.println("all are done looks like, setting notDone to false");notDone=false;/*break x;*/}	
+				if(allPlayersAreDone())
+				{
+					System.out.println("all are done looks like, setting notDone to false");
+					notDone=false;
+				}	
 		
 	}
 
 	
 	public void contGame(){
-		if(everyoneFolded)gameStage=5;
 			if(gameStage==0){ //pre-flop
-				if(!allPlayersAreDone())roundOfBetting();
+				if(!allPlayersAreDone())
+					roundOfBetting();
 				else{
 					gameStage++;
 					System.out.println("FLOPPP!!!!");
@@ -176,7 +174,8 @@ public class Game{
 				}	
 			}
 			if(gameStage==1){  //flop
-				if(!allPlayersAreDone())roundOfBetting();
+				if(!allPlayersAreDone())
+					roundOfBetting();
 				else{
 					gameStage++;
 					System.out.println("TURNNN!!!!");
@@ -188,7 +187,8 @@ public class Game{
 				}
 			}
 			if(gameStage==2){  //turn
-				if(!allPlayersAreDone())roundOfBetting();
+				if(!allPlayersAreDone())
+					roundOfBetting();
 				else{
 					gameStage++;
 					System.out.println("RIVVVERRRRR!!!!");
@@ -200,7 +200,8 @@ public class Game{
 				}
 			}
 			if(gameStage==3){  //river
-				if(!allPlayersAreDone())roundOfBetting();
+				if(!allPlayersAreDone())
+					roundOfBetting();
 				else gameStage++;
 			}
 			if(gameStage==4){  //end
@@ -210,11 +211,10 @@ public class Game{
 			}
 			if(gameStage==5){//everyone folded
 				players.get(0).winMoney(pot);
-				System.out.println("Everyone fOlded trying to end");
+				System.out.println("Everyone folde, " + players.get(0).getName() + " wins");
 				endGame();
 				handIsOver=true;
 				gameOver=true;
-				//everyone else folded, give last player the pot, end game
 			}
 	}
 	
@@ -316,7 +316,11 @@ public class Game{
 	
 	public void endGame() {
 		deck.resetDeckCount();
-		for(Player i:players){i.setPlayerBet(0);i.clearHand();}
+		for(Player i:players){
+			//i.setPlayerBet(0);
+			//i.clearHand();
+			i.resetPlayerBetAndHand();
+		}
 		deck.resetDeckCount();
 	}
 
@@ -354,8 +358,7 @@ public class Game{
 		isRiver=false;
 		everyoneFolded=false;
 		players.clear();
-		for(Player pl:pla)
-		{
+		for(Player pl:pla){
 			System.out.println(pl.getName()+":::id::"+pl.getID());
 			players.add(pl);
 		}

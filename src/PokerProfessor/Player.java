@@ -197,7 +197,7 @@ public class Player {
 		raised=false;
 		folded=false;
 	}
-	public void resetPlayer(){
+	public void resetPlayerForBettingRound(){
 		resetToastString();
 		resetToasting();
 		resetIsThinking();
@@ -205,6 +205,11 @@ public class Player {
 		resetIsDoneThinking();
 		resetPlayerBet();
 		resetChoice();
+	}
+	
+	public void resetPlayerBetAndHand(){
+		resetPlayerBet();
+		clearHand();
 	}
 	public String toString() {
 		String s = "";

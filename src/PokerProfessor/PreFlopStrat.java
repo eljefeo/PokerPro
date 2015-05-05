@@ -17,7 +17,7 @@ public class PreFlopStrat {
 		
 		//lets system out print here to check.....
 		String r[]=new String[]{a[0]+"."+b[0],a[1]+"."+b[1]};
-		//System.out.println("After Sort: "+r[0]+" , "+r[1]);
+		System.out.println("After Sort: "+r[0]+" , "+r[1]);
 		
 		for(int g=0;g<pF.length;g++)
 			if(r[0].equals(pF[g][0])&&r[1].equals(pF[g][1]))
