@@ -22,7 +22,6 @@ public class Poker extends Applet implements Runnable,MouseListener {
 	private int toastX,toastY,toastA,curA;
 	private PlayerLayout playerLayout;
 	private String[] playersCards=new String[2];
-	private int gitInt = 0;
 	private Image image,tempImage,backGround,dealerChip,back,skull,playByPlay,timer,toastBox;
 	private Image check,call,raise,fold,pot,activities,arrow,potBack,playerChips,playerName;
 	private Image one,two,three,four,five,six,seven,eight,nine,zero,potText;
@@ -128,7 +127,6 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		g.drawImage(call, call.getWidth(this), screenSizeY-call.getHeight(this), this);
 		g.drawImage(raise, raise.getWidth(this)*2, screenSizeY-raise.getHeight(this), this);
 		g.drawImage(fold, fold.getWidth(this)*3, screenSizeY-fold.getHeight(this), this);
-		System.out.println("git?");
 		//box for the pot amount
 		g.drawImage(potBack,screenSizeX/5*2-xu/2, screenSizeY/5, this);
 		g.drawString(cont.getActivityText(), xu*2,screenSizeY-call.getHeight(this));
