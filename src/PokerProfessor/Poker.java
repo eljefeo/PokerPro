@@ -127,7 +127,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		g.drawImage(call, call.getWidth(this), screenSizeY-call.getHeight(this), this);
 		g.drawImage(raise, raise.getWidth(this)*2, screenSizeY-raise.getHeight(this), this);
 		g.drawImage(fold, fold.getWidth(this)*3, screenSizeY-fold.getHeight(this), this);
-		//box for the pot amount
+		//box for the pot amountsdf
 		g.drawImage(potBack,screenSizeX/5*2-xu/2, screenSizeY/5, this);
 		g.drawString(cont.getActivityText(), xu*2,screenSizeY-call.getHeight(this));
 
