@@ -114,7 +114,7 @@ public class Game{
 	
 	public void roundOfBetting(){
 		//uncomment me for developing System.out.println("doing round");
-		x:if(true){
+
 				p=players.get(action);
 				//uncomment me for developing System.out.println("\nAction is at "+action+":::"+players.size());
 				//uncomment me for developing System.out.println("\n\ndoing round of betting --- doin "+p.getName());
@@ -124,47 +124,47 @@ public class Game{
 					if(!p.isDone){
 						//uncomment me for developing System.out.println("you are not done, breaking for you");
 						at="Your Turn, current bet is "+currentBet;
-						/*midRoundOfBetting=true;break x;*/}
-					else{System.out.println("player is done apparently");}//incAction();}
+					}
+					else{System.out.println("player is done");}//incAction();}
 				}
 				
 				else if(!p.isDone)
 				{
-					if(!p.hasWaited()){
-						System.out.println(p.getName()+" not has waited");
-						if(!p.isWaiting()){
-							System.out.println(p.getName()+" is not waiting");
-							p.startWaiting();
+					if(!p.isDoneThinking()){
+						if(!p.isThinking()){
+							p.startThinking();
+							System.out.println(p.getName()+" started thinking");
 							int aa=rand.nextInt(5);if(aa==0)aa=1;
-							p.setWaitTime(aa); 
-							System.out.println(p.getWaitTime()+" wait time");
-							break x;
+							p.setThinkingTime(aa); 
+							System.out.println(p.getThinkingTime()+" wait time");
+							return;
 						}
-						else{if(p.getWaitTime()>0){
-							System.out.println(p.getName()+" wait time >0");
-							try{Thread.sleep(1000);p.decWaitTime();break x;} 
-							catch(InterruptedException e){e.printStackTrace();}
+						else{if(p.getThinkingTime()>0){
+							System.out.println(p.getName()+" is thinking");
+							p.think();
+							return;
 						}else{
-							System.out.println(p.getName()+" done waiting");
-							p.resetWaiting();p.resetHasWaited();}
+							System.out.println(p.getName()+" done thinking");
+							p.resetIsThinking();p.resetIsDoneThinking();
+							}
 						}
 					}
 					at=players.get(action).getName()+" 's turn";
 					//uncomment me for developing System.out.println("this guy is not done: "+p.getName());
 				//giveOptions(p);
-					doCompDecision(p);}
+					doCompDecision(p);
+					}
 				else if(p.isDone){System.out.println("this guy IS done");incAction();}
 		
 				//uncomment me for developing System.out.println("\nAfterwards Action is at "+action);
 				if(allPlayersAreDone()){System.out.println("all are done looks like, setting notDone to false");notDone=false;/*break x;*/}	
-		}
+		
 	}
 
 	
 	public void contGame(){
 		if(everyoneFolded)gameStage=5;
-			if(gameStage==0){  
-				//pre-flop
+			if(gameStage==0){ //pre-flop
 				if(!allPlayersAreDone())roundOfBetting();
 				else{
 					gameStage++;

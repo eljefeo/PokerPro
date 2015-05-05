@@ -8,7 +8,7 @@ public class PreFlopStrat {
 	
 	public int getPreFlopScore(String[]c){
 		System.out.println("WE ARE CHECKING PRE FLOP SCORES.....");
-		System.out.println("Before sort: "+c[0]+" , "+c[1]);
+		//System.out.println("Before sort: "+c[0]+" , "+c[1]);
 		
 		String d[]=(c[0]+"."+c[1]).split("\\.");
 		int[]a=new int[]{Integer.parseInt(d[0]),Integer.parseInt(d[2])};
@@ -17,12 +17,13 @@ public class PreFlopStrat {
 		
 		//lets system out print here to check.....
 		String r[]=new String[]{a[0]+"."+b[0],a[1]+"."+b[1]};
-		System.out.println("After Sort: "+r[0]+" , "+r[1]);
+		//System.out.println("After Sort: "+r[0]+" , "+r[1]);
 		
 		for(int g=0;g<pF.length;g++)
 			if(r[0].equals(pF[g][0])&&r[1].equals(pF[g][1]))
 				return 170-g;
 		
+		System.out.println("in pre flop strat should never get herexxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		return -1;//should never come to this
 	}
 	public void load(){

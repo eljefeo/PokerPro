@@ -24,10 +24,11 @@ public class Player {
 	ArrayList[]hasRaised;
 	private boolean raised,checked,called,folded,overTheTop;
 	boolean isDone;//isFolded;
-	private boolean isWaiting=false,hasWaited=false;
+	private boolean isThinkingVar=false,isDoneThinkingVar=false;
 	private boolean isToasting;
 	private boolean human = false;
-	private int waitTime=0;
+	private int thinkingTime=0;
+	private int maxThinkingTime = 5;//in seconds
 	
 
 	public Player(int id,String name,long chips, boolean human){
@@ -72,23 +73,31 @@ public class Player {
 		return hand;
 	}
 	
-	public void setHasWaited(){hasWaited=true;}
+	public void setIsThinking(){isDoneThinkingVar=true;}
 	
-	public void resetHasWaited(){hasWaited=false;}
+	public void resetIsDoneThinking(){isDoneThinkingVar=false;}
 	
-	public boolean hasWaited(){return hasWaited;}
+	public boolean isDoneThinking(){return isDoneThinkingVar;}
 	
-	public void startWaiting(){isWaiting=true;}
+	public void startThinking(){isThinkingVar=true;}
 	
-	public boolean isWaiting(){return isWaiting;}
+	public boolean isThinking(){return isThinkingVar;}
 	
-	public void setWaitTime(int a){waitTime=a;}
+	public void setThinkingTime(int a){thinkingTime=a;}
 	
-	public int getWaitTime(){return waitTime;}
+	public int getThinkingTime(){return thinkingTime;}
 	
-	public void decWaitTime(){waitTime--;}
+	public void think(){
+		try{Thread.sleep(1000);} 
+		catch(InterruptedException e){e.printStackTrace();}
+		thinkingTime--;
+	}
 	
-	public void resetWaiting(){isWaiting=false;waitTime=0;}
+	public int getMaxThinkingTime(){
+		return maxThinkingTime;
+	}
+	
+	public void resetIsThinking(){isThinkingVar=false;thinkingTime=0;}
 	
 	public void setToastString(int v){
 		isToasting=true;
@@ -191,9 +200,9 @@ public class Player {
 	public void resetPlayer(){
 		resetToastString();
 		resetToasting();
-		resetWaiting();
+		resetIsThinking();
 		resetRaise();
-		resetHasWaited();
+		resetIsDoneThinking();
 		resetPlayerBet();
 		resetChoice();
 	}

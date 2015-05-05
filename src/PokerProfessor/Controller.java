@@ -122,7 +122,8 @@ public class Controller {
 			game.startGame();
 		}
 		else if(game.gameOver){
-			turnGameOff();incDealer();
+			turnGameOff();
+			incDealer();
 		}
 		else
 		{

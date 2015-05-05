@@ -127,7 +127,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		g.drawImage(call, call.getWidth(this), screenSizeY-call.getHeight(this), this);
 		g.drawImage(raise, raise.getWidth(this)*2, screenSizeY-raise.getHeight(this), this);
 		g.drawImage(fold, fold.getWidth(this)*3, screenSizeY-fold.getHeight(this), this);
-		//box for the pot amountsd
+		//box for the pot amount
 		g.drawImage(potBack,screenSizeX/5*2-xu/2, screenSizeY/5, this);
 		g.drawString(cont.getActivityText(), xu*2,screenSizeY-call.getHeight(this));
 
@@ -196,14 +196,24 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		}
 	}
 	
+	
+	
 	public void drawTimerBarThing(Graphics g){
 
+		//max thinking time = 5 seconds
+		
 		//the Timer bar thing
-		int pm=cont.game.players.get(cont.game.getAction()).getWaitTime();
+		int pm=cont.game.players.get(cont.game.getAction()).getThinkingTime();
 		if(pm==0)pm=1;
 		g.setColor(Color.BLUE);
-		g.fillRect(playerLayout.getPlayerX(cont.game.getWhoeversTurn())-xu,
-				playerLayout.getPlayerY(cont.game.getWhoeversTurn())+yu/pm,xu/2,yu*8-(yu/pm));
+		System.out.println("xu : " + xu + " yu : " + yu + " pm : " + pm);
+		
+		g.fillRect(
+				playerLayout.getPlayerX(cont.game.getWhoeversTurn())-xu,
+				playerLayout.getPlayerY(cont.game.getWhoeversTurn())+yu/pm,
+				xu/2,
+				yu*8-(yu/pm)
+				);
 		
 	}
 	
