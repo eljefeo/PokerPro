@@ -11,7 +11,10 @@ public class Game{
 	long pot, currentBet,currentBetOrRaise,bigBlind,smallBlind;
 	int gameState = 0;
 	Random rand=new Random();
+	//String[]flop=new String[3];
+	//String[]boardSeven=new String[7];
 	Board board = new Board();
+	//String turn,river,card,burn;
 	String at="";
 	Scanner sc=new Scanner(System.in);
 	private int choice,action,gameStage;//, numPlayers;
@@ -101,17 +104,24 @@ public class Game{
 
 	private boolean allPlayersAreDone(){
 		int v=0;
-		for(Player p:players)
-			if(p.isDone)v++;
-		if(v==players.size())return true;
+		for(Player p:players){
+			//uncomment me for developing System.out.println(p.name+" is done?>>" + p.isDone);
+			if(p.isDone)v++;}
+		if(v==players.size()){System.out.println("returning true" + p.isDone);return true;}
 		else return false;
 	}
 	
 	public void roundOfBetting(){
+		//uncomment me for developing System.out.println("doing round");
 
 				p=players.get(action);
+				//uncomment me for developing System.out.println("\nAction is at "+action+":::"+players.size());
+				//uncomment me for developing System.out.println("\n\ndoing round of betting --- doin "+p.getName());
+			
 				if(p.isHuman()&&!p.hasFolded()){
+					//uncomment me for developing System.out.println("Human's turn");
 					if(!p.isDone){
+						//uncomment me for developing System.out.println("you are not done, breaking for you");
 						at="Your Turn, current bet is "+currentBet;
 					}
 					else{System.out.println("player is done");}//incAction();}
@@ -122,22 +132,28 @@ public class Game{
 					if(!p.isDoneThinking()){
 						if(!p.isThinking()){
 							p.startThinking();
+							System.out.println(p.getName()+" started thinking");
 							int aa=rand.nextInt(5);if(aa==0)aa=1;
 							p.setThinkingTime(aa); 
+							System.out.println(p.getThinkingTime()+" wait time");
 							return;
 						}
 						else{if(p.getThinkingTime()>0){
+							System.out.println(p.getName()+" is thinking");
 							p.think();
 							return;
 						}else{
+							System.out.println(p.getName()+" done thinking");
 							p.resetIsThinking();p.resetIsDoneThinking();
 							}
 						}
 					}
 					at=players.get(action).getName()+" 's turn";
+					//uncomment me for developing System.out.println("this guy is not done: "+p.getName());
+				//giveOptions(p);
 					doCompDecision(p);
 					}
-				else if(p.isDone)incAction();
+				else if(p.isDone){System.out.println("this guy IS done");incAction();}
 		
 				//uncomment me for developing System.out.println("\nAfterwards Action is at "+action);
 				if(allPlayersAreDone()){System.out.println("all are done looks like, setting notDone to false");notDone=false;/*break x;*/}	
@@ -150,24 +166,36 @@ public class Game{
 			if(gameStage==0){ //pre-flop
 				if(!allPlayersAreDone())roundOfBetting();
 				else{
-					flop();resetCurrentBet();
-					resetAction();resetPRoundOfBetting();
+					gameStage++;
+					System.out.println("FLOPPP!!!!");
+					flop();
+					resetCurrentBet();
+					resetAction();
+					resetPRoundOfBetting();
 					isFlop=true;
 				}	
 			}
 			if(gameStage==1){  //flop
 				if(!allPlayersAreDone())roundOfBetting();
 				else{
-					turn();resetCurrentBet();
-					resetAction();resetPRoundOfBetting();
+					gameStage++;
+					System.out.println("TURNNN!!!!");
+					turn();
+					resetCurrentBet();
+					resetAction();
+					resetPRoundOfBetting();
 					isTurn=true;
 				}
 			}
 			if(gameStage==2){  //turn
 				if(!allPlayersAreDone())roundOfBetting();
 				else{
-					gameStage++;river();resetCurrentBet();
-					resetAction();resetPRoundOfBetting();
+					gameStage++;
+					System.out.println("RIVVVERRRRR!!!!");
+					river();
+					resetCurrentBet();
+					resetAction();
+					resetPRoundOfBetting();
 					isRiver=true;
 				}
 			}
@@ -176,7 +204,9 @@ public class Game{
 				else gameStage++;
 			}
 			if(gameStage==4){  //end
-				showDown();endGame();gameOver=true;
+				showDown();
+				endGame();	
+				gameOver=true;
 			}
 			if(gameStage==5){//everyone folded
 				players.get(0).winMoney(pot);
@@ -249,10 +279,20 @@ public class Game{
 		}
 		ArrayList<Object[]>winners=bigBrain.whoWins(pP);
 		
-		for(int g=0;g<winners.size();g++)
-			System.out.println("Winner is Player "+players.get((int)winners.get(g)[0]).getName()+" with a "+winners.get(g)[6]);
+		for(int g=0;g<winners.size();g++){
+			System.out.println("Winner is Player "+players.get((int)winners.get(g)[0]).getName()
+					+" with a "+winners.get(g)[6]);
+			//for(int i=1;i<6;i++)
+			//System.out.print(winners.get(g)[i]+", ");
+			//System.out.println();
+			}
+		
 		long moneyForWinners=pot/winners.size();
-		for(int j=0;j<winners.size();j++)players.get((int)winners.get(j)[0]).winMoney(moneyForWinners);
+		for(int j=0;j<winners.size();j++){
+			//System.out.println("chip count before of winner "+j+" is "+players.get((int)winners.get(j)[0]).getChips());//prints chips before win
+			players.get((int)winners.get(j)[0]).winMoney(moneyForWinners);
+			//System.out.println("chip count after of winner "+j+" is "+players.get((int)winners.get(j)[0]).getChips());//prints chips after win
+		}
 	}
 
 	
@@ -261,7 +301,8 @@ public class Game{
 		for(Player i:players){i.setPlayerBet(0);i.clearHand();}
 		deck.resetDeckCount();
 	}
-	
+
+
 	private int getChoiceBigBrain(Player player) {
 		int pos=0;
 		for(int i=0;i<players.size();i++)
