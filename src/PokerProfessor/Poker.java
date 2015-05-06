@@ -21,7 +21,7 @@ public class Poker extends Applet implements Runnable,MouseListener {
 	private Player curP;
 	private int toastX,toastY,toastA,curA;
 	private PlayerLayout playerLayout;
-	private String[] playersCards=new String[2];
+	private int[] playersCards=new int[2];
 	private Image image,tempImage,backGround,dealerChip,back,skull,playByPlay,timer,toastBox;
 	private Image check,call,raise,fold,pot,activities,arrow,potBack,playerChips,playerName;
 	private Image one,two,three,four,five,six,seven,eight,nine,zero,potText;
@@ -70,6 +70,11 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		setupImages();
 	}
 
+	//d = 0
+	//c = 1
+	//h = 2
+	//s = 3
+	
 	@Override
 	public void start(){Thread thread=new Thread(this);thread.start();}
 
@@ -81,7 +86,9 @@ public class Poker extends Applet implements Runnable,MouseListener {
 
 	@Override
 	public void run() {
+
 		//TestBigBrain ttt = new TestBigBrain();ttt.goo();
+
 		while(true){cont.go(); repaint();}
 	}
 
@@ -138,13 +145,13 @@ public class Poker extends Applet implements Runnable,MouseListener {
 	
 	public void drawCommunityCards(Graphics g){
 		//draw community cards
-		String[] board = cont.game.getBoard();
+		int[] board = cont.game.getBoard();
 		for(int i=0;i<board.length;i++){
-			if(board[i] != null){
+			//if(board[i] != null){
 				cardUrl="cards2/"+board[i]+".png";
 				tempImage=getImage(base,cardUrl);
 				g.drawImage(tempImage,(int)screenSizeX/40*(11+(i*4)),screenSizeY/5*2,this);
-			}
+			//}
 			
 		}
 	}
@@ -268,9 +275,9 @@ public class Poker extends Applet implements Runnable,MouseListener {
 		raise=getImage(base,"cards2/raise.png");
 		fold=getImage(base,"cards2/fold.png");
 		dealerChip=getImage(base,"cards2/d.png");
-		back=getImage(base,"cards2/back.png");
+		back=getImage(base,"cards2/0.png");
 		//chip1=getImage(base,"cards2/chip1.png");
-		skull=getImage(base,"cards2/skull.png");
+		skull=getImage(base,"cards2/666.png");
 		arrow=getImage(base,"cards2/arrow.png");
 		activities=getImage(base,"cards2/activities.png");
 		//=getImage(base,"cards2/pot.png");

@@ -5,13 +5,20 @@ import java.util.ArrayList;
 public class TestBigBrain {
 	
 	BigBrain bigBrain = new BigBrain();
-	Object[][]pP=new Object[2][7];
+	int[][]pP=new int[9][7];
 	
 	
 	
 	public TestBigBrain(){
-		pP[0]=new Object[]{"5.c","6.d","8.c","9.c","7.c","12.h","3.d"};
-		pP[1]=new Object[]{"14.s","2.d","3.s","4.s","5.s","9.h","7.d"};
+		pP[0]=new int[]{51,60,81,91,71,122,30};//single cards
+		pP[1]=new int[]{143,20,33,141,53,92,70};//pairs
+		pP[2]=new int[]{70,73,33,43,41,92,143};//2 pair
+		pP[3]=new int[]{70,73,33,43,71,92,143};//trips
+		pP[4]=new int[]{61,23,32,43,53,92,71};//straight
+		pP[5]=new int[]{81,83,51,41,20,141,131};//flush
+		pP[5]=new int[]{81,83,132,130,120,121,131};//fullhouse
+		pP[5]=new int[]{122,123,132,130,120,121,131};//quads
+		pP[5]=new int[]{91,111,132,130,101,121,131};//straight flush
 		
 
 	}

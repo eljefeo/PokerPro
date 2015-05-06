@@ -9,7 +9,7 @@ public class Player {
 	private String toastString="";
 	private String name="";
 	private long chips,playerBet;
-	private String[]hand=new String[2];
+	private int[]hand=new int[2];
 	private int handCount=0;
 	int position=0;
 	String[]curMap;
@@ -37,21 +37,21 @@ public class Player {
 		this.setChips(chips);
 		this.human = human;
 		setPlayerBet(0);
-		hand[0]=null;
-		hand[1]=null;
+		hand[0]=0;
+		hand[1]=0;
 		isDone=false;
 		raised=false;
 	}
 
 
-	public void dealPlayer(String card){
-		if (handCount==0){hand[0]=card;handCount=1;}
-		else{hand[1]=card;handCount=0;}
+	public void dealPlayer(int i){
+		if (handCount==0){hand[0]=i;handCount=1;}
+		else{hand[1]=i;handCount=0;}
 	}
 
 	public void clearHand() {
-		hand[0] = null;
-		hand[1] = null;
+		hand[0] = 0;
+		hand[1] = 0;
 	}
 
 	public void winMoney(long m){
@@ -63,13 +63,13 @@ public class Player {
 	}
 	public int getID(){return id;}
 
-	public String getCard(int i){
-		if(hand[i]!=null)
+	public int getCard(int i){
+		//if(hand[i]!=0)
 		return hand[i];
-		else return "0.s";
+		//else return "0.s";
 	}
 	
-	public String[] getCards(){
+	public int[] getCards(){
 		return hand;
 	}
 	

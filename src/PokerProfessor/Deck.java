@@ -4,19 +4,21 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class Deck {
 
-	String[] deck = new String[52];
+	int[] deck = new int[52];
 	AtomicReferenceArray<String> ara;
-	char[] suits = { 's', 'd', 'c', 'h' };
-	String card;
+	//char[] suits = { 's', 'd', 'c', 'h' };
+	int[] suits = {0,1,2,3};
+	//String card;
+	int card;
 	int deckCount;
 
 	public Deck() {
-		card = "";
+		card = 0;
 		deckCount = 0;
 		int cntr = 0;
 		for (int i = 0; i <= 3; i++) {
 			for (int a = 2; a <= 14; a++) {
-				card = a + "." + suits[i];
+				card = a*10 + suits[i];
 				deck[cntr] = card;
 				cntr++;
 			}
@@ -26,7 +28,7 @@ public class Deck {
 	public void showDeck() {
 		String a = "";
 		for (int i = 0; i < deck.length; i++) {
-			a += deck[i];
+			a += deck[i]+", ";
 		}
 		System.out.println(a);
 	}
@@ -36,18 +38,19 @@ public class Deck {
 		int N = deck.length;
 		for (int i = 0; i < N; i++) {
 			int r = i + (int) (Math.random() * (N - i));
-			String t = deck[r];
+			int t = deck[r];
 			deck[r] = deck[i];
 			deck[i] = t;
 		}
 	}
 
-	public String getCard() {
+	public int getCard() {
 		
 	//using atomic ref to avoid possible thread/memory problems ive been experiencing
 		//prev line instead of ara was 'String card = deck[deckCount];'
-		ara = new AtomicReferenceArray<String>(deck);
-		String card = (String) ara.get(deckCount);
+		//ara = new AtomicReferenceArray<int>(deck);
+		int card = deck[deckCount];
+		//String card = (String) ara.get(deckCount);
 		deckCount++;
 		return card;
 	}
