@@ -144,15 +144,24 @@ public class BigBrain{
 		
 		f:for(int i =0;i< allz.length;i++){
 			int num = allz[i]/10;//check for pairs, trips, quads
-			for(int sint=0;sint<si.length;sint++)if(si[sint]==0){si[sint]=num;continue f;}else if(si[sint]==num)break;
-			for(int pint=0;pint<pS.length;pint++)if(pS[pint]==0){pS[pint]=num;continue f;}else if(pS[pint]==num)break;
-			for(int tint=0;tint<tR.length;tint++)if(tR[tint]==0){tR[tint]=num;continue f;}else if(tR[tint]==num)break;
+			for(int sint=0;sint<si.length;sint++)
+				if(si[sint]==0){si[sint]=num;continue f;}
+				else if(si[sint]==num)break;
+			for(int pint=0;pint<pS.length;pint++)
+				if(pS[pint]==0){pS[pint]=num;continue f;}
+				else if(pS[pint]==num)break;
+			for(int tint=0;tint<tR.length;tint++)
+				if(tR[tint]==0){tR[tint]=num;continue f;}
+				else if(tR[tint]==num)break;
 			qd = num;
 		}
 		
-		for(int i=0;i<si.length;i++)if(si[i]==0){int[]t=new int[i];for(int j=0;j<i;j++)t[j]=si[j];si=t;break;}SuperSort.sort(si);
-		for(int i=0;i<pS.length;i++)if(pS[i]==0){int[]t=new int[i];for(int j=0;j<i;j++)t[j]=pS[j];pS=t;break;}SuperSort.sort(pS);
-		for(int i=0;i<tR.length;i++)if(tR[i]==0){int[]t=new int[i];for(int j=0;j<i;j++)t[j]=tR[j];tR=t;break;}SuperSort.sort(tR);
+		for(int i=0;i<si.length;i++)if(si[i]==0){int[]t=new int[i];
+		for(int j=0;j<i;j++)t[j]=si[j];si=t;break;}SuperSort.sort(si);
+		for(int i=0;i<pS.length;i++)if(pS[i]==0){int[]t=new int[i];
+		for(int j=0;j<i;j++)t[j]=pS[j];pS=t;break;}SuperSort.sort(pS);
+		for(int i=0;i<tR.length;i++)if(tR[i]==0){int[]t=new int[i];
+		for(int j=0;j<i;j++)t[j]=tR[j];tR=t;break;}SuperSort.sort(tR);
 
 		for(int i=0;i<allz.length;i++)r8k[allz[i]%10]++;//setup for flushes, how many of each suit
 		//Flush and Straight Flush, if there is a flush out there, there cant be quads also, so we check these first
@@ -165,19 +174,19 @@ public class BigBrain{
 				for(int a=0;a<allz.length;a++)//get the numbers of the cards attached to the suits
 					if(allz[a]%10==i)
 						x8[acntr++]=allz[a]/10;
-				QuickSort.sort(x8); // sort the numbers 
-				for(int xxx:x8)System.out.println("straight flush : " + xxx);
-				for(int a=0;a<5;a++)x9[a]=x8[a];x9[5]=5; //the hand has a flush, lets see if its a straight flush too
+				SuperSort.sort(x8); // sort the numbers 
+				 //the hand has a flush, lets see if its a straight flush too
 					for(int a=0;a<x-4;a++){
-						int cc=0;
-						for(int f=1;f<x8.length;f++){
-							cc=x8[f-1]==x8[f]+1?cc+1:0;
-							if(cc==4)return new int[]{x8[f],x8[f-1],x8[f-2],x8[f-3],x8[f-4],8};
+						for(int f=x8.length-5;f>=0;f--){
+							if(x8[f]==x8[f+1]-1&&x8[f+1]==x8[f+2]-1&&x8[f+2]==x8[f+3]-1&&x8[f+3]==x8[f+4]-1)
+								return new int[]{x8[f],x8[f+1],x8[f+2],x8[f+3],x8[f+4],8};
 						}
 						if(x8[0]==la[0]&&x8[1]==la[1]&&x8[2]==la[2]&&x8[3]==la[3]&&x8[4]==la[4])// check for low ace straight
 							return new int[] {la[1],la[2],la[3],la[4],la[0],8};//handID
 					}
-				return x9;
+					//setup the flush only since not straight flush
+					for(int a=0;a<5;a++)x9[a]=x8[a];x9[5]=5;
+					return x9;
 			}
 		}
 		// quads with the highest kicker
@@ -196,7 +205,7 @@ public class BigBrain{
 		{
 			for(int s : si)System.out.println("singles : " + s);
 
-			for(int i=si.length-5;i>0;i--)
+			for(int i=si.length-5;i>=0;i--)
 				if(si[i]==si[i+1]-1&&si[i+1]==si[i+2]-1&&si[i+2]==si[i+3]-1&&si[i+3]==si[i+4]-1)
 					return new int[]{si[i],si[i+1],si[i+2],si[i+3],si[i+4],4};
 				if(si[0]==la[0]&&si[1]==la[1]&&si[2]==la[2]&&si[3]==la[3]&&si[4]==la[4])// Separate check for low ace straight
