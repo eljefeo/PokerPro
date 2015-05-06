@@ -52,7 +52,7 @@ public class Game{
 	
 	private void resetCurrentBet(){currentBet=0;}
 	private void resetAction(){action=0;}
-	private void resetPRoundOfBetting(){notDone=true;for(Player p:players){p.resetPlayer();p.isDone=false;}}
+	private void resetPRoundOfBetting(){notDone=true;for(Player p:players){p.resetPlayerForBettingRound();p.isDone=false;}}
 	private void resetPot(){pot=0;}
 	
 	public void betOrRaise(Player player,long betOrRaise){

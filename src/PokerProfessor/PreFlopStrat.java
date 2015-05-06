@@ -4,6 +4,24 @@ public class PreFlopStrat {
 	private final int[][]pF=new int[169][2];
 	public PreFlopStrat(){
 		load();
+		System.out.println("testing deck and preflop first");
+		
+		Deck deck = new Deck();
+		int[] allnums = new int[169];
+		for(int i=1;i<170;i++)allnums[i-1]=i;
+		for(int i : allnums)System.out.println(i);
+		
+		for(int i=0;i<11000;i++){
+			deck.shuffleDeck();
+			
+			int[] hand = new int[]{deck.getCard(), deck.getCard()};
+			int prefl = getPreFlopScore(hand);
+			System.out.println(hand[0]+","+hand[1] + " Preflop score : " + prefl);
+			deck.resetDeckCount();
+			for(int ie = 0;ie<allnums.length;ie++)if(allnums[ie] == prefl)allnums[ie]=0;
+		}
+		
+		for(int i : allnums)if(i!=0)System.out.println(i);
 	}
 	
 	public int getPreFlopScore(int []c){
