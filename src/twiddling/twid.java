@@ -38,26 +38,43 @@ public class twid {
   public static void main (String[] args) throws java.lang.Exception
 	{
   
-	  makeHands();
-	  //testEvaluator();
+	 // makeHands();
+	testEvaluator();
   
 		
 	}
 	
-	
+  
   
   public static int evalHand(int[] u){
+	  int[] m={(u[0]&8191),(u[1]&8191),(u[2]&8191),(u[3]&8191),(u[4]&8191)};
+	  boolean h=(65536%((u[0]|u[1]|u[2]|u[3]|u[4])&122880))==0;
+	  int xord = m[0]^m[1]^m[2]^m[3]^m[4];
+	  int ord = m[0]|m[1]|m[2]|m[3]|m[4];
+	  boolean s=32624896%ord==0;
+	  boolean q = m[0]+m[1]+m[2]+m[3]+m[4]==(ord^xord)*4+xord;
+	  int v = 2;
+	  while((xord&=xord-1)!=0){v++;}while((ord&=ord-1)!=0){v++;}
+	  return h&&s?8:v==3?q?7:6:h?5:s?4:v==6?3:v==4?2:v==7?1:0;
+  }
+  
+/*  public static int evalHand(int[] u){
 	  int e=0;
 	  int[] m={(u[0]&8191),(u[1]&8191),(u[2]&8191),(u[3]&8191),(u[4]&8191)};
 	  boolean h=(65536%((u[0]|u[1]|u[2]|u[3]|u[4])&122880))==0;
 	  boolean s=32624896%(m[0]|m[1]|m[2]|m[3]|m[4])==0;
 	  for(int i=0;i<m.length-1;i++){for(int j=i+1;j<m.length;j++){if(m[i]==m[j])e++;}}
+	  
+	  
+
 	  return h&&s?8:e==6?7:e==4?6:h?5:s?4:e;
   }
+  */
+  
   
   
   public static void makeHands(){
-	  int howMany = 3000000;
+	  int howMany = 5000000;
 	  int[] allc2 = allc.clone();
 	  int[][] hands = new int[howMany][5];
 	  Random r = new Random();
@@ -131,15 +148,19 @@ public class twid {
 				for(int k=j+1;k<csm.length;k++){
 					for(int l=k+1;l<csm.length;l++){
 						for(int m=l+1;m<csm.length;m++){
-							System.out.println("\n\n" + getName(cnm[i]) + " i\t" + bin(cnm[i]) + "\t"+(csm[i]&8191)
+							/*System.out.println("\n\n" + getName(cnm[i]) + " i\t" + bin(cnm[i]) + "\t"+(csm[i]&8191)
 									+"\n"+getName(cnm[j]) + " j\t" + bin(cnm[j]) + "\t"+(csm[j]&8191)
 									+"\n"+getName(cnm[k]) + " k\t" + bin(cnm[k]) + "\t"+(csm[k]&8191)
 									+"\n"+getName(cnm[l]) + " l\t" + bin(cnm[l]) + "\t"+(csm[l]&8191)
 									+"\n"+getName(cnm[m]) + " m\t" + bin(cnm[m]) + "\t"+(csm[m]&8191)
 									);
+							*/
 							int[] cu = {cnm[i],cnm[j],cnm[k],cnm[l],cnm[m]};
 							int fsm = (csm[i]|csm[j]|csm[k]|csm[l]|csm[m]);
 							int[]c={csm[i],csm[j],csm[k],csm[l],csm[m]};
+							
+							
+							
 							int winningHand = evalHand(cu);
 							//System.out.println(handNames[winningHand]);
 							if(winningHand>finalWinner[0]){
