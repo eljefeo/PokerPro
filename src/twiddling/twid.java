@@ -27,6 +27,7 @@ public class twid {
 			  16385,16386,16388,16392,16400,16416,16448,16512,16640,16896,17408,18432,20480,
 			  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
 		  };
+  
   static int straightDec = 32624896;
   static int flushDec = 65536;
   
@@ -36,79 +37,24 @@ public class twid {
   public static void main (String[] args) throws java.lang.Exception
 	{
 	  makeShitLoadOfHands();
-	 //testEvaluator();
+	  //testEvaluator();
 	  //testRandom();
   
 	}
+
   
   public static int evalHand(int[] u){
-	int x=(u[0]^u[1]^u[2]^u[3]^u[4])&0x1FFF,o=(u[0]|u[1]|u[2]|u[3]|u[4]);
-	int m=0x1FFF,v=2,t=o&m;while((t&=t-1)>0){v++;}t=x;while((t&=t-1)>0){v++;}
-	boolean s=0x1F1D100%(o&m)==0,h=(0x10000%(o&0x1E000))==0;
-	boolean f=(u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-x*3-((o&m)^x)*2==0;
-	return h&&s?8:v==3?f?6:7:h?5:s?4:v==6?3:v==4?2:v==7?1:0;
-	
-	/*return v==7?1:v==4?2:v==6?3:v==3?
-		((u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-x)/4==((o&m)^x)
-		?7:6:0x1F1D100%(o&m)==0?(0x10000%(o&0x1E000))==0
-		?8:4:(0x10000%(o&0x1E000))==0?5:0;*/
+	int xm=(u[0]^u[1]^u[2]^u[3]^u[4])&0x1FFF,o=(u[0]|u[1]|u[2]|u[3]|u[4]);
+	int m=0x1FFF,om=o&m,v=2,t=om;while((t&=t-1)>0){v++;}t=xm;while((t&=t-1)>0){v++;}
+	boolean s=0x1F1D100%om==0,h=(0x10000%(o&0x1E000))==0;
+	boolean f=(u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-xm*3-(om^xm)*2==0;
+	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?f?6:7:0;
   }
 	
-/*  public static int evalHand(int[] u){
-	 // System.out.println(u[0]+" "+u[1]+" "+u[2]+" "+u[3]+" "+u[4]);
-	  //int uAdd=u[0]+u[1]+u[2]+u[3]+u[4], mAdd=uAdd&0x1FFF;
-	  //System.out.println("Add :"+uAdd+","+((uAdd&~0x1FFF)/10)+","+(65536%((uAdd&~0x1FFF)/10))+" " + bin(uAdd) + ","+bin(mAdd));
-	  //int[] m={(u[0]&0x1FFF),(u[1]&0x1FFF),(u[2]&0x1FFF),(u[3]&0x1FFF),(u[4]&0x1FFF)};
-	  int x=(u[0]^u[1]^u[2]^u[3]^u[4])&0x1FFF,o=(u[0]|u[1]|u[2]|u[3]|u[4]);//&0x1FFF;
-	  //System.out.println("x " + x +" " + bin(x)+ ", o " + o +" "+ bin(o) + "\n: " + o%x + " " + bin(o%x));
-	  //System.out.println("h="+bin((u[0]|u[1]|u[2]|u[3]|u[4])&0x1E000));
-	 // boolean h=(0x10000%((u[0]|u[1]|u[2]|u[3]|u[4])&0x1E000))==0;
-	  //boolean h=(0x10000%((u[0]|u[1]|u[2]|u[3]|u[4])&0x1E000))==0;
-	  
-	  //boolean s=0x1F1D100%o==0;
-	  //boolean q=((u[0]&0x1FFF)+(u[1]&0x1FFF)+(u[2]&0x1FFF)+(u[3]&0x1FFF)+(u[4]&0x1FFF)==(o^x)*4+x);
-	 // boolean q=(u[0]&0x1FFF)*4;
-	  //System.out.println("m " + (m[0]+m[1]+m[2]+m[3]+m[4]) + ",o "+ o );
-	  int v=2,x2=x,o2=o&0x1FFF;while((o2&=o2-1)!=0){v++;}while((x2&=x2-1)!=0){v++;}
-	  
-	  //System.out.println(v);
-	  //return h&&s?8:v==3?q?7:6:h?5:s?4:v==6?3:v==4?2:v==7?1:0;
-	  return v==7?1:v==4?2:v==6?3:v==3?
-			  ((u[0]&0x1FFF)+(u[1]&0x1FFF)+(u[2]&0x1FFF)+(u[3]&0x1FFF)+(u[4]&0x1FFF)==((o&0x1FFF)^x)*4+x)
-			  ?7:6:0x1F1D100%(o&0x1FFF)==0
-					  ?(0x10000%(o&0x1E000))==0?8:4:(0x10000%(o&0x1E000))==0?5:0;
-					 // :h&&s?8:s?4:h?5:0;
-  }*/
-  
-  
-/*  public static int evalHandj(int[] u){
-	  int[] m={(u[0]&0x1FFF),(u[1]&0x1FFF),(u[2]&0x1FFF),(u[3]&0x1FFF),(u[4]&0x1FFF)};
-	  int x=m[0]^m[1]^m[2]^m[3]^m[4],o=m[0]|m[1]|m[2]|m[3]|m[4];
-	  boolean h=(0x10000%((u[0]|u[1]|u[2]|u[3]|u[4])&0x1E000))==0;
-	  boolean s=0x1F1D100%o==0,q=m[0]+m[1]+m[2]+m[3]+m[4]==(o^x)*4+x;
-	  int v=2;while((x&=x-1)!=0){v++;}while((o&=o-1)!=0){v++;}
-	  return h&&s?8:v==3?q?7:6:h?5:s?4:v==6?3:v==4?2:v==7?1:0;
-  }*/
-  
-/*  public static int evalHand(int[] u){
-	  int e=0;
-	  int[] m={(u[0]&8191),(u[1]&8191),(u[2]&8191),(u[3]&8191),(u[4]&8191)};
-	  boolean h=(65536%((u[0]|u[1]|u[2]|u[3]|u[4])&122880))==0;
-	  boolean s=32624896%(m[0]|m[1]|m[2]|m[3]|m[4])==0;
-	  for(int i=0;i<m.length-1;i++){for(int j=i+1;j<m.length;j++){if(m[i]==m[j])e++;}}
-	  
-	  
 
-	  return h&&s?8:e==6?7:e==4?6:h?5:s?4:e;
-  }
-  */
-  
-
-  
-  
   
   public static void makeShitLoadOfHands(){
-	  int howMany = 5000000;
+	  int howMany = 4000000;
 	  int[] allc2 = allc.clone();
 	  int[][] hands = new int[howMany][5];
 	  Random r = new Random();
@@ -127,11 +73,11 @@ public class twid {
 		  allc2=allc.clone();
 	  }
 	  int[] handCounter = new int[9];
-	  
+
 	  int c=0;
 	  long startT1 = System.nanoTime();
 	  for(int[] hand : hands){
-		  c++;c--;
+		  c++;
 	  }
 	  long endT1 = System.nanoTime();
 	  
@@ -142,7 +88,7 @@ public class twid {
 	  }
 	  long endT = System.nanoTime();
 	  for(int j=0;j<handCounter.length;j++)
-		  System.out.println(handNames[j] +" : " + handCounter[j]);
+		  System.out.println(handNames[j] +" : " + handCounter[j] + " : " + ((double)handCounter[j]/howMany*100) + "%");
 	  
 	  long total = (endT - startT) - (endT1 - startT1);
 	  //double totalT = total/1000000;
@@ -152,9 +98,6 @@ public class twid {
 	  
 	  
   }
-  
-  
-  
   
   public static void testEvaluator(){
 	 
