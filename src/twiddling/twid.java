@@ -35,17 +35,19 @@ public class twid {
   
   
   public static void main (String[] args) throws java.lang.Exception
-	{
-	  makeShitLoadOfHands();
+	{  
+
+	  //makeShitLoadOfHands();
 	  //testEvaluator();
 	  //testRandom();
+	  binaryDupCheck();
   
 	}
 
   
   public static int evalHand(int[] u){
-	int xm=(u[0]^u[1]^u[2]^u[3]^u[4])&0x1FFF,o=(u[0]|u[1]|u[2]|u[3]|u[4]);
-	int m=0x1FFF,om=o&m,v=2,t=om;while((t&=t-1)>0){v++;}t=xm;while((t&=t-1)>0){v++;}
+	int m=0x1FFF, xm=(u[0]^u[1]^u[2]^u[3]^u[4])&m,o=(u[0]|u[1]|u[2]|u[3]|u[4]);
+	int om=o&m,v=2,t=om;while((t&=t-1)>0){v++;}t=xm;while((t&=t-1)>0){v++;}
 	boolean s=0x1F1D100%om==0,h=(0x10000%(o&0x1E000))==0;
 	boolean f=(u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-xm*3-(om^xm)*2==0;
 	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?f?6:7:0;
@@ -97,6 +99,63 @@ public class twid {
 	  
 	  
 	  
+  }
+  
+  public static void binaryDupCheck(){
+	  
+	  
+	  int[][] ranHands = 
+		  {
+			  makeHighCardHand(),
+			  makePairHand(),
+			  makeTwoPairHand(),
+			  makeTripHand(),
+			  makeStraightHand(),
+			  makeFlushHand(),
+			  makeFullHouseHand(),
+			  makeQuadsHand(),
+			  //makeStraightFlushHand()
+		  };
+	  
+	  for(int i=0;i<ranHands.length;i++){
+		  if(i==0||i==4||i==5||i==8)continue;
+		  
+		  System.out.println(handNames[i]+"\t"+handNames[evalHand(ranHands[i])]);
+		  int added = 0, ord = 0, xord = 0;
+		  
+		  for(int f :  ranHands[i]){
+			  int d=f;
+			  f&=0x1FFF;added+=f;ord|=f;xord^=f;
+			  System.out.println(getName(d)+"\t"+f+"\t"+bin(f));
+		  }
+		  System.out.println("\nadded\t"+added+"\t"+bin(added) + "\t"+cb(added)
+				  +"\nord\t"+ord+"\t"+bin(ord)+ "\t"+cb(ord)
+				  +"\nxord\t"+xord+"\t"+bin(xord)+ "\t"+cb(added)
+				  +"\nadd+ord"+"\t"+(added+ord)+"\t"+bin(added+ord)+ "\t"+cb(added+ord)
+				  +"\nadd|ord"+"\t"+(added|ord)+"\t"+bin(added|ord)+"\t"+cb(added|ord)
+				  +"\nadd^ord"+"\t"+(added^ord)+"\t"+bin(added^ord)+"\t"+cb(added^ord)
+				  +"\nadd+xrd"+"\t"+(added+xord)+"\t"+bin(added+xord)+ "\t"+cb(added+xord)
+				  +"\nadd|xrd"+"\t"+(added|xord)+"\t"+bin(added|xord)+"\t"+cb(added|xord)
+				  +"\nadd^xrd"+"\t"+(added^xord)+"\t"+bin(added^xord)+"\t"+cb(added^xord)
+				  +"\nadd-ord"+"\t"+(added-ord)+"\t"+bin(added-ord)+"\t"+cb(added-ord)
+				  +"\nlog/or"+"\t"+(Math.log(added))//+"\t"+bin(Math.log(ord)/Math.log(2))+("\t")//+cb(Math.log(ord)/Math.log(2))
+				  +"\n");
+		  
+		  
+	  }
+	  
+
+  }
+  
+  public static int cb(int t){
+	  int v = 0;
+	  
+	  
+	  while(t>0){
+		  t&=t-1;
+		  v++;
+		  }
+	  return v;
   }
   
   public static void testEvaluator(){
@@ -213,7 +272,7 @@ public class twid {
   }
   
 	public static int[] makeHighCardHand(){
-		System.out.println("Making high card hand");
+		//System.out.println("Making high card hand");
 		  int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ra,rb,rc,rd,re;
@@ -301,7 +360,7 @@ public class twid {
 	}
 	
 	public static int[] makePairHand(){
-		System.out.println("Making Pair hand");
+		//System.out.println("Making Pair hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -325,19 +384,19 @@ public class twid {
 	}
 	
 	public static int[] makeTwoPairHand(){
-		System.out.println("Making Two Pair hand");
+		//System.out.println("Making Two Pair hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
 		  
 		  while(x==0){ran=r.nextInt((12-0)+1)+0;x=allc2[ran];}
-		  a=x;allc2[ran]=0;allc2[ran+13]=0;allc2[ran+26]=0;x=0;
+		  a=x;allc2[ran]=0;allc2[ran+13]=0;allc2[ran+26]=0;allc2[ran+39]=0;x=0;
 		  
 		  
 		  while(x==0){ran=r.nextInt((12-0)+1)+0;x=allc2[ran];}
-		  b=x;allc2[ran]=0;allc2[ran+26]=0;x=0;
+		  b=x;allc2[ran]=0;x=0;
 		  
-		  e=allc2[ran+13];
+		  e=allc2[ran+13];allc2[ran+13]=0;
 		  
 		  while(x==0){ran=r.nextInt((25-13)+1)+13;x=allc2[ran];}
 		  c=x;
@@ -348,7 +407,7 @@ public class twid {
 	}
 	
 	public static int[] makeTripHand(){
-		System.out.println("Making Trip hand");
+		//System.out.println("Making Trip hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -372,7 +431,7 @@ public class twid {
 	}
 	
 	public static int[] makeStraightHand(){
-		System.out.println("Making Straight hand");
+		//System.out.println("Making Straight hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -389,7 +448,7 @@ public class twid {
 	}
 	
 	public static int[] makeFlushHand(){
-		System.out.println("Making Flush hand");
+		//System.out.println("Making Flush hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -417,7 +476,7 @@ public class twid {
 	}
 	
 	public static int[] makeFullHouseHand(){
-		System.out.println("Making Fullhouse hand");
+		//System.out.println("Making Fullhouse hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -438,7 +497,7 @@ public class twid {
 	}
 	
 	public static int[] makeQuadsHand(){
-		System.out.println("Making Quads hand");
+		//System.out.println("Making Quads hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
@@ -457,7 +516,7 @@ public class twid {
 	}
 
 	public static int[] makeStraightFlushHand(){
-		System.out.println("Making straightFlush hand");
+		//System.out.println("Making straightFlush hand");
 		 int[] allc2 = allc.clone();
 		  Random r = new Random();
 		  int ran=0,x=0,a=0,b=0,c=0,d=0,e=0;
