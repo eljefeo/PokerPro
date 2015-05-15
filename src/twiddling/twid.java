@@ -1,5 +1,8 @@
 package twiddling;
+import java.awt.List;
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class twid {
@@ -12,6 +15,85 @@ public class twid {
 		};
 
 
+
+
+  
+  static int straightDec = 32624896;
+  static int flushDec = 65536;
+  
+  
+  
+  
+  public static void main (String[] args) throws java.lang.Exception
+	{  
+
+	  makeShitLoadOfHands();
+	  //testEvaluator();
+	// testRandom();
+	  //binaryDupCheck();
+	  //make4Bits();
+  
+	}
+  
+  public static void make4Bits(){
+	  int[] nums = {1,2,4,8,16,32,64,128,256,512,1024,2048,4096};
+	  ArrayList<int[]> allints = new ArrayList<int[]>();
+	  for(int i=0;i<nums.length-1;i++){
+		  for(int j=i+1;j<nums.length;j++){
+			  for(int k=j+1;k<nums.length;k++){
+				  for(int l=k+1;l<nums.length;l++){
+					  
+					  allints.add(new int[]{nums[i],nums[j],nums[k],nums[l]});
+				  }
+			  }
+		  }
+	  }
+		System.out.println("count " + allints.size());
+		
+		
+	int[] all4Bits=new int[allints.size()];
+		for(int j = 0;j<allints.size();j++){
+			int[] jint = allints.get(j);
+			
+			all4Bits[j]=jint[0]^jint[1]^jint[2]^jint[3];
+			
+			
+		}
+		
+/*		for(int i =0;i<all4Bits.length;i++){
+			for(int j =0;j<all4Bits.length;j++){
+				if(all4Bits[i]==all4Bits[j] ){
+					System.out.println("MATCH DAMN at index  i " + i + " , j " + j +" "+ all4Bits[i] + " " + all4Bits[j] );
+				}
+			}
+		}
+		*/
+		
+		
+		int biggest = 0, bigInd = 0;
+		for(int i=2; i<2147483647;i++){
+			int smallCounter =0;
+			long freshnum = all4Bits[0]/i;
+			for ( int j=1;j<all4Bits.length;j++){
+				if(all4Bits[j]/i==freshnum)smallCounter++;
+				else break;
+			}
+			if (smallCounter>biggest){biggest = smallCounter;bigInd = i;System.out.println("bigger " + biggest + " at index " + i + " with mod " + freshnum);}
+			if(smallCounter == all4Bits.length){System.out.println("POSSIBLE " + i);break;}
+			//else System.out.println("matches /715 : " + i + " :: " + smallCounter);
+		}
+			System.out.println("biggest " + biggest + ", at index " + bigInd);
+		
+		
+		/*	  for(int[] ii : allints){
+				  for(int i : ii){
+					System.out.println(i);
+				  }
+				System.out.println();
+			  }*/
+			  
+			  
+  }
 
   static String[] allNames = new String[]
 		  {
@@ -28,26 +110,11 @@ public class twid {
 			  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
 		  };
   
-  static int straightDec = 32624896;
-  static int flushDec = 65536;
-  
-  
-  
-  
-  public static void main (String[] args) throws java.lang.Exception
-	{  
-
-	  //makeShitLoadOfHands();
-	  //testEvaluator();
-	  //testRandom();
-	  binaryDupCheck();
-  
-	}
-
-  
   public static int evalHand(int[] u){
-	int m=0x1FFF, xm=(u[0]^u[1]^u[2]^u[3]^u[4])&m,o=(u[0]|u[1]|u[2]|u[3]|u[4]);
-	int om=o&m,v=2,t=om;while((t&=t-1)>0){v++;}t=xm;while((t&=t-1)>0){v++;}
+	int m=0x1FFF, xm=(u[0]^u[1]^u[2]^u[3]^u[4])&m;
+	int o=(u[0]|u[1]|u[2]|u[3]|u[4]),om=o&m,v=2,t=om;
+	if((t&=t-1)>0)if((t&=t-1)>0)if((t&=t-1)>0)v+=3;else v+=2;else v+=1;
+	t=xm;while((t&=t-1)>0){v++;}
 	boolean s=0x1F1D100%om==0,h=(0x10000%(o&0x1E000))==0;
 	boolean f=(u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-xm*3-(om^xm)*2==0;
 	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?f?6:7:0;
@@ -56,7 +123,7 @@ public class twid {
 
   
   public static void makeShitLoadOfHands(){
-	  int howMany = 4000000;
+	  int howMany = 5000000;
 	  int[] allc2 = allc.clone();
 	  int[][] hands = new int[howMany][5];
 	  Random r = new Random();
@@ -89,14 +156,13 @@ public class twid {
 		  evalHand(hand);
 	  }
 	  long endT = System.nanoTime();
-	  for(int j=0;j<handCounter.length;j++)
-		  System.out.println(handNames[j] +" : " + handCounter[j] + " : " + ((double)handCounter[j]/howMany*100) + "%");
+	 // for(int j=0;j<handCounter.length;j++)
+		 // System.out.println(handNames[j] +" : " + handCounter[j] + " : " + ((double)handCounter[j]/howMany*100) + "%");
 	  
 	  long total = (endT - startT) - (endT1 - startT1);
 	  //double totalT = total/1000000;
 	  double time = (double)total/1000000000;
 	  System.out.println((int)((1/time)*(howMany/1000000)) + " million hands a second");
-	  
 	  
 	  
   }
