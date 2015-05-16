@@ -13,6 +13,11 @@ public class twid {
 			"High Card", "Pair", "Two Pair", "Trips", 
 			"Straight", "Flush", "Full House", "Quads", "Straight Flush"
 		};
+	
+	static int[] frequency=
+		{
+			1302540,1098240,123552,54912,10200,5108,3744,624,40
+		};
 
 
 
@@ -27,9 +32,10 @@ public class twid {
   public static void main (String[] args) throws java.lang.Exception
 	{  
 
-	  makeShitLoadOfHands();
-	  //testEvaluator();
-	// testRandom();
+	 speedTest();
+	 testEveryHand();
+	 //testEvaluator();
+	 //testRandom();
 	  //binaryDupCheck();
 	  //make4Bits();
   
@@ -42,7 +48,6 @@ public class twid {
 		  for(int j=i+1;j<nums.length;j++){
 			  for(int k=j+1;k<nums.length;k++){
 				  for(int l=k+1;l<nums.length;l++){
-					  
 					  allints.add(new int[]{nums[i],nums[j],nums[k],nums[l]});
 				  }
 			  }
@@ -110,24 +115,72 @@ public class twid {
 			  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
 		  };
   
-  public static int evalHand(int[] u){
+  
+  
+  public static int evalHand2(int[] u){
+
 	int m=0x1FFF, xm=(u[0]^u[1]^u[2]^u[3]^u[4])&m;
-	int o=(u[0]|u[1]|u[2]|u[3]|u[4]),om=o&m,v=2,t=om;
-	if((t&=t-1)>0)if((t&=t-1)>0)if((t&=t-1)>0)v+=3;else v+=2;else v+=1;
-	t=xm;while((t&=t-1)>0){v++;}
-	boolean s=0x1F1D100%om==0,h=(0x10000%(o&0x1E000))==0;
-	boolean f=(u[0]&m)+(u[1]&m)+(u[2]&m)+(u[3]&m)+(u[4]&m)-xm*3-(om^xm)*2==0;
-	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?f?6:7:0;
+	int o=(u[0]|u[1]|u[2]|u[3]|u[4]);
+	boolean h=0x10000%(o&0x1E000)==0;
+	o&=m;int v=2;
+	boolean s=0x1F1D100%o==0;boolean q=((u[0]+u[1]+u[2]+u[3]+u[4]-xm)&m)==(m&((o^xm)<<2));
+	if((o&=o-1)>0)if((o&=o-1)>0)if((o&=o-1)>0)v+=3;else v+=2;else v+=1;
+	while((xm&=xm-1)>0)v++;
+	
+	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?q?7:6:0;
+  }
+  
+  public static int evalHand(int u0, int u1,int u2,int u3, int u4){
+	int m=0x1FFF, xm=(u0^u1^u2^u3^u4)&m,o=(u0|u1|u2|u3|u4),om=o&m,t=om;
+	int v=(t&=t-1)!=0?(t&=t-1)!=0?(t&=t-1)!=0?5:4:3:2;
+	t=xm;while((t&=t-1)!=0)v++;
+	boolean s=0x1F1D100%om==0,h=(0x10000%(o&~m))==0;
+	boolean q=((u0+u1+u2+u3+u4-xm)&m)==(m&((om^xm)<<2));
+	return v==7?1:v==4?2:v==6?3:h&&s?8:h?5:s?4:v==3?q?7:6:0;
+  }
+  
+
+  
+  public static void testEveryHand(){
+	  int totalHands = 2598960;
+	  int[] allCards = new int[totalHands*5];
+	  int totalCounter=0;
+	  for(int i=0;i<allc.length-1;i++)
+		  for(int j=i+1;j<allc.length;j++)
+			  for(int k=j+1;k<allc.length;k++)
+				  for(int l=k+1;l<allc.length;l++)
+					  for(int m=l+1;m<allc.length;m++){
+						  allCards[totalCounter*5]=allc[i];
+						  allCards[totalCounter*5+1]=allc[j];
+						  allCards[totalCounter*5+2]=allc[k];
+						  allCards[totalCounter*5+3]=allc[l];
+						  allCards[totalCounter*5+4]=allc[m];
+						  totalCounter++;
+					  }
+						  
+		
+	  int[] handCounter = new int[9];
+		 for(int i=0;i<allCards.length;i+=5)
+		  handCounter[evalHand(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
+	  
+	  
+	   for(int j=0;j<handCounter.length;j++){
+		   String res = handCounter[j]==frequency[j]?"All "+frequency[j]+" "+handNames[j]+" hands passed\t" : (handCounter[j]-frequency[j])+" of "+frequency[j]+" "+handNames[j]+" hands failed!"; 
+		   System.out.println(res+" : " + ((double)handCounter[j]/totalCounter*100) + "%");
+	   }
+		 
+	  System.out.println("Total Count : " + totalCounter);
+	  
   }
 	
 
   
-  public static void makeShitLoadOfHands(){
-	  int howMany = 5000000;
+  public static void speedTest(){
+	  int howMany = 10000000;
 	  int[] allc2 = allc.clone();
-	  int[][] hands = new int[howMany][5];
+	  int []allCards = new int[howMany*5];
 	  Random r = new Random();
-	  int ran=0;
+	  int ran = 0;
 	  int x = 0;
 	  for(int i=0;i<howMany;i++){
 		  for(int j=0;j<5;j++){
@@ -135,7 +188,7 @@ public class twid {
 				  ran = r.nextInt((51 - 1) + 1) +1;
 				  x = allc2[ran];
 			  }
-			  hands[i][j] = x;
+			  allCards[5*i+j] = x;
 			  allc2[ran]=0;
 			  x=0;
 		  }
@@ -145,15 +198,17 @@ public class twid {
 
 	  int c=0;
 	  long startT1 = System.nanoTime();
-	  for(int[] hand : hands){
-		  c++;
+	  for(int i=0;i<allCards.length;i++){
+		  i++;i++;i++;i++;
 	  }
 	  long endT1 = System.nanoTime();
 	  
 	  long startT = System.nanoTime();
-	  for(int[] hand : hands){
-		  //handCounter[evalHand(hand)]++;
-		  evalHand(hand);
+	 // for(int[] hand : hands){
+	  for(int i=0;i<allCards.length;i+=5){
+		  
+		  //handCounter[evalHand(new int[]{allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]})]++;
+		  evalHand(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 	  }
 	  long endT = System.nanoTime();
 	 // for(int j=0;j<handCounter.length;j++)
@@ -162,6 +217,7 @@ public class twid {
 	  long total = (endT - startT) - (endT1 - startT1);
 	  //double totalT = total/1000000;
 	  double time = (double)total/1000000000;
+	  System.out.println("Did " + howMany + " hands in " + time +" seconds");
 	  System.out.println((int)((1/time)*(howMany/1000000)) + " million hands a second");
 	  
 	  
@@ -186,7 +242,7 @@ public class twid {
 	  for(int i=0;i<ranHands.length;i++){
 		  if(i==0||i==4||i==5||i==8)continue;
 		  
-		  System.out.println(handNames[i]+"\t"+handNames[evalHand(ranHands[i])]);
+		  System.out.println(handNames[i]+"\t"+handNames[evalHand(ranHands[i][0],ranHands[i][1],ranHands[i][2],ranHands[i][3],ranHands[i][4])]);
 		  int added = 0, ord = 0, xord = 0;
 		  
 		  for(int f :  ranHands[i]){
@@ -267,7 +323,7 @@ public class twid {
 							
 							
 							
-							int winningHand = evalHand(cu);
+							int winningHand = evalHand(cu[0],cu[1],cu[2],cu[3],cu[4]);
 							//System.out.println(handNames[winningHand]);
 							if(winningHand>finalWinner[0]){
 								finalWinner[0] = winningHand;
@@ -318,7 +374,7 @@ public class twid {
 	  for(int i=0;i<ranHands.length;i++){
 		  mixUpCards(ranHands[i]);
 		  //for(int k : ranHands[i])System.out.print(getName(k) + "," );
-		  int w = evalHand(ranHands[i]);
+		  int w = evalHand(ranHands[i][0],ranHands[i][1],ranHands[i][2],ranHands[i][3],ranHands[i][4]);
 		  if(w==i)passes++;
 		  else{
 			for(int k : ranHands[i])System.out.print(getName(k) + "," );
